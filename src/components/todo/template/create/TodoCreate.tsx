@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { DatePicker } from "antd";
+import { Modal } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Itodo } from "components/todo/TodoService";
 
-const CircleButton = styled.button<{ open: boolean }>`
+const CircleButton = styled.button`
   background: #33bb77;
   width: 50px;
   height: 50px;
@@ -19,24 +21,31 @@ const CircleButton = styled.button<{ open: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    background: #7bed9f;
+  }
 `;
 
 const InsertFormPositioner = styled.div`
   width: 100%;
+  background-color: #eeeeee;
   border-bottom: 1px solid #eeeeee;
 `;
 
 const InsertForm = styled.form`
   display: flex;
-  background: #eeeeee;
+  align-items: center;
+  position: relative;
   padding-left: 40px;
-  padding-top: 36px;
+  padding-top: 16px;
   padding-right: 60px;
-  padding-bottom: 36px;
+  padding-bottom: 16px;
 `;
 
 const Input = styled.input`
-  padding: 12px;
+  padding: 12px 12px 12px 21px;
   border: 1px solid #dddddd;
   width: 100%;
   outline: none;
@@ -44,8 +53,47 @@ const Input = styled.input`
   box-sizing: border-box;
   color: #119955;
   &::placeholder {
-    color: #dddddd;
+    color: #bfbfbf;
     font-size: 16px;
+  }
+
+  &:hover {
+    border: 1px solid #119955;
+  }
+
+  &:focus {
+    border: 1px solid #119955;
+    box-shadow: 0 0 0 2px rgb(46 213 115/ 20%);
+  }
+`;
+
+const DateContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 0px 110px 16px 40px;
+
+  div {
+    width: 100%;
+  }
+
+  input {
+    padding: 12px;
+    font-size: 17px;
+  }
+
+  .ant-picker {
+    &:hover {
+      border: 1px solid #119955;
+    }
+  }
+
+  .ant-picker-focused {
+    border: 1px solid #119955;
+    box-shadow: 0 0 0 2px rgb(46 213 115/ 20%);
+   
+}
+
+
   }
 `;
 
@@ -58,27 +106,40 @@ interface TodoCreateProps {
 const TodoCreate = ({
   nextId,
   createTodo,
-  incrementNextId
+  incrementNextId,
 }: TodoCreateProps) => {
-  const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
+  const [date, setDate] = useState("");
 
-  const handleToggle = () => setOpen(!open);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setValue(e.target.value);
 
+  function onChange(date: any, dateString: string) {
+    setDate(dateString);
+  }
+
+  function error() {
+    Modal.error({
+      title: "빈칸을 작성해주세요!!",
+      content: "todo text는 필수값입니다! 😃 ",
+    });
+  }
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // 새로고침 방지
+    if (value) {
+      createTodo({
+        id: nextId,
+        text: value,
+        done: false,
+        dueDate: date,
+      });
+      incrementNextId(); // nextId 하나 증가
 
-    createTodo({
-      id: nextId,
-      text: value,
-      done: false
-    });
-    incrementNextId(); // nextId 하나 증가
-
-    setValue(""); // input 초기화
-    setOpen(false); // open 닫기
+      setValue(""); // input 초기화
+    } else {
+      error();
+    }
   };
 
   return (
@@ -91,11 +152,13 @@ const TodoCreate = ({
             onChange={handleChange}
             value={value}
           />
-
-          <CircleButton onClick={handleToggle} open={open}>
+          <CircleButton>
             <PlusCircleOutlined />
           </CircleButton>
         </InsertForm>
+        <DateContainer>
+          <DatePicker onChange={onChange} />
+        </DateContainer>
       </InsertFormPositioner>
     </>
   );

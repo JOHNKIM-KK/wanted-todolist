@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 export type Itodo = {
   id: number;
   text: string;
+  dueDate: string;
   done: boolean;
 };
 
@@ -11,6 +12,7 @@ let initialTodos: Itodo[] = [];
 
 export const useTodo = () => {
   const [todoState, setTodoState] = useState(initialTodos);
+
   var nextIdState = 0;
 
   useEffect(() => {
@@ -27,11 +29,16 @@ export const useTodo = () => {
 
   const toggleTodo = (id: number) => {
     //@TODO
+    setTodoState((prevState) =>
+      prevState.map((todo) =>
+        todo.id === id ? { ...todo, done: !todo.done } : todo
+      )
+    );
   };
 
   const removeTodo = (id: number) => {
     setTodoState((prevState) =>
-      prevState.filter((todo: Itodo) => todo.id === id)
+      prevState.filter((todo: Itodo) => todo.id !== id)
     );
   };
 
@@ -40,7 +47,7 @@ export const useTodo = () => {
     setTodoState((prevState) =>
       prevState.concat({
         ...todo,
-        id: nextId
+        id: nextId,
       })
     );
   };
@@ -65,6 +72,6 @@ export const useTodo = () => {
     incrementNextId,
     toggleTodo,
     removeTodo,
-    createTodo
+    createTodo,
   };
 };

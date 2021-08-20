@@ -4,11 +4,9 @@ import React from "react";
 import styled, { css } from "styled-components";
 
 const Remove = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
   color: #119955;
   font-size: 16px;
+  cursor: pointer;
 `;
 
 const TodoItemBlock = styled.div`
@@ -24,15 +22,15 @@ const TodoItemBlock = styled.div`
 `;
 
 const CheckCircle = styled.div<{ done: boolean }>`
-  width: 20px;
-  height: 20px;
-  border-radius: 16px;
-  border: 1px solid #33bb77;
-  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 20px;
+  height: 20px;
   margin-right: 20px;
+  border-radius: 16px;
+  border: 1px solid #33bb77;
+  font-size: 16px;
   cursor: pointer;
   ${(props) =>
     props.done &&
@@ -54,6 +52,25 @@ const Text = styled.div<{ done: boolean }>`
     `}
 `;
 
+const DueDate = styled.div<{ done: boolean }>`
+  padding-right: 20px;
+  color: #119955;
+
+  span {
+    color: #ff6348;
+  }
+
+  ${(props) =>
+    props.done &&
+    css`
+      span {
+        color: #ced4da;
+      }
+      color: #ced4da;
+      text-decoration: line-through;
+    `}
+`;
+
 interface TodoItemProps {
   toggleTodo: (id: number) => void;
   removeTodo: (id: number) => void;
@@ -61,17 +78,25 @@ interface TodoItemProps {
 }
 
 const TodoItem = ({ toggleTodo, removeTodo, todo }: TodoItemProps) => {
-  const done = false;
-  const handleToggle = () => {};
+  const handleToggle = () => {
+    toggleTodo(todo.id);
+  };
 
-  const handleRemove = () => {};
+  const handleRemove = () => {
+    removeTodo(todo.id);
+  };
 
   return (
     <TodoItemBlock>
-      <CheckCircle done={done} onClick={handleToggle}>
-        {done && <CheckOutlined />}
+      <CheckCircle done={todo.done} onClick={handleToggle}>
+        {todo.done && <CheckOutlined />}
       </CheckCircle>
-      <Text done={done}>{todo.text}</Text>
+      <Text done={todo.done}>{todo.text}</Text>
+      {todo.dueDate && (
+        <DueDate done={todo.done}>
+          Due date : <span>{todo.dueDate}</span>
+        </DueDate>
+      )}
       <Remove onClick={handleRemove}>
         <DeleteOutlined />
       </Remove>
