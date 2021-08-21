@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { DatePicker } from "antd";
-import { Modal } from "antd";
+import { DatePicker, Modal } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Itodo } from "components/todo/TodoService";
 
@@ -90,10 +89,6 @@ const DateContainer = styled.div`
   .ant-picker-focused {
     border: 1px solid #119955;
     box-shadow: 0 0 0 2px rgb(46 213 115/ 20%);
-   
-}
-
-
   }
 `;
 
@@ -114,16 +109,16 @@ const TodoCreate = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setValue(e.target.value);
 
-  function onChange(date: any, dateString: string) {
+  const onChange = (date: any, dateString: string) => {
     setDate(dateString);
-  }
+  };
 
-  function error() {
+  const error = () => {
     Modal.error({
       title: "빈칸을 작성해주세요!!",
       content: "todo text는 필수값입니다! 😃 ",
     });
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // 새로고침 방지
