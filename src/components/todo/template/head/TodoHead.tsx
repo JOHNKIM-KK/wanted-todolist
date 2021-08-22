@@ -29,13 +29,13 @@ const DateText = styled.div`
 `;
 
 const DAYS = [
+  "Sunday",
   "Monday",
   "Tuesday",
   "Wednesday",
   "Thursday",
   "Friday",
   "Saturday",
-  "Sunday",
 ];
 
 const MONTHS = [
@@ -63,7 +63,7 @@ const TodoHead = () => {
   let hours = today.getHours();
   let minutes = today.getMinutes();
   let seconds = today.getSeconds();
-  let currentDate = `${DAYS[day - 1]}  ${MONTHS[month]} ${date}, ${year}`;
+  let currentDate = `${DAYS[day]}  ${MONTHS[month]} ${date}, ${year}`;
   let currentTime = `${hours < 10 ? `0${hours}` : hours}: ${
     minutes < 10 ? `0${minutes}` : minutes
   } : ${seconds < 10 ? `0${seconds}` : seconds}`;
@@ -72,6 +72,8 @@ const TodoHead = () => {
     dates: currentDate,
     time: currentTime,
   });
+
+  console.log(day);
 
   useIntever(() => {
     setTotalDate({
